@@ -26,5 +26,10 @@
     "rollup"
   ],
   "main": "inferno.js",
-  "repository": "https://github.com/trueadm/inferno"
+  "repository": "https://github.com/trueadm/inferno",
+  "scripts": {
+	"build:lib": "",
+	"build:dist:dev": "",
+	"build:dist:prod": ""
+  }
 }

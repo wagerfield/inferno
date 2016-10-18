@@ -7,14 +7,32 @@ import {
 	createVComponent,
 	createVPlaceholder,
 	createVText
-} from '../../../src/core/shapes';
+} from './shapes';
 import {
 	ValueTypes,
 	ChildrenTypes,
 	NodeTypes
-} from '../../../src/core/constants';
-import cloneVNode from '../../../src/factories/cloneVNode';
-import { warning, NO_OP } from '../../../src/shared';
+} from './constants';
+import cloneVNode from './cloneVNode';
+import { 
+	NO_OP,
+	isArray,
+	toArray,
+	isStatefulComponent,
+	isStringOrNumber,
+	isNullOrUndef,
+	isInvalid,
+	isFunction,
+	isAttrAnEvent,
+	isString,
+	isNumber,
+	isNull,
+	isTrue,
+	isUndefined,
+	isObject,
+	throwError,
+	warning
+} from './common';
 
 if (typeof window !== 'undefined' && window.document) {
 	window.process = {
@@ -56,6 +74,22 @@ export default {
 	ChildrenTypes,
 	NodeTypes,
 
-	// TODO do we still need this? can we remove?
-	NO_OP
+	// common
+	NO_OP,
+	isArray,
+	toArray,
+	isStatefulComponent,
+	isStringOrNumber,
+	isNullOrUndef,
+	isInvalid,
+	isFunction,
+	isAttrAnEvent,
+	isString,
+	isNumber,
+	isNull,
+	isTrue,
+	isUndefined,
+	isObject,
+	throwError,
+	warning
 };
