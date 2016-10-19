@@ -11,7 +11,12 @@ import {
 import {
 	ValueTypes,
 	ChildrenTypes,
-	NodeTypes
+	NodeTypes,
+	isUnknownChildrenType,
+	isKeyedListChildrenType,
+	isNonKeyedListChildrenType,
+	isTextChildrenType,
+	isNodeChildrenType
 } from './constants';
 import cloneVNode from './cloneVNode';
 import { 
@@ -31,7 +36,9 @@ import {
 	isUndefined,
 	isObject,
 	throwError,
-	warning
+	warning,
+	isBrowser,
+	EMPTY_OBJ
 } from './common';
 
 if (typeof window !== 'undefined' && window.document) {
@@ -67,7 +74,7 @@ export default {
 	createVText,
 
 	// cloning
-	cloneVNode,	
+	cloneVNode,
 
 	// enums
 	ValueTypes,
@@ -75,21 +82,30 @@ export default {
 	NodeTypes,
 
 	// common
-	NO_OP,
-	isArray,
-	toArray,
-	isStatefulComponent,
-	isStringOrNumber,
-	isNullOrUndef,
-	isInvalid,
-	isFunction,
-	isAttrAnEvent,
-	isString,
-	isNumber,
-	isNull,
-	isTrue,
-	isUndefined,
-	isObject,
-	throwError,
-	warning
+	common: {
+		isBrowser,
+		NO_OP,
+		isArray,
+		toArray,
+		isStatefulComponent,
+		isStringOrNumber,
+		isNullOrUndef,
+		isInvalid,
+		isFunction,
+		isAttrAnEvent,
+		isString,
+		isNumber,
+		isNull,
+		isTrue,
+		isUndefined,
+		isObject,
+		throwError,
+		warning,
+		isUnknownChildrenType,
+		isKeyedListChildrenType,
+		isNonKeyedListChildrenType,
+		isTextChildrenType,
+		isNodeChildrenType,
+		EMPTY_OBJ
+	}
 };

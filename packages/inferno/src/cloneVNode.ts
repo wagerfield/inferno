@@ -9,13 +9,15 @@ import {
 	isVElement,
 	isOptVElement,
 	createVElement,
-	createVComponent,
-	OptVElement
+	createVComponent
 } from './shapes';
 import {
 	ValueTypes,
 	ChildrenTypes
 } from './constants';
+import {
+	OptVElement
+} from '../../../shared/shapes';
 
 export function convertVOptElementToVElement(optVElement: OptVElement) {
 	const bp = optVElement.bp;
