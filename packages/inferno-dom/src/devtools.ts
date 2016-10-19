@@ -1,9 +1,9 @@
 import {
-	common
+	isFunction,
+	isNull,
+	isUndefined
 } from 'inferno';
 import { roots, render } from './rendering';
-
-const { isFunction, isNull, isUndefined } = common;
 
 export const devToolsStatus = {
 	connected: false

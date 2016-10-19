@@ -23,8 +23,6 @@ Lifecycle.prototype.trigger = function trigger () {
     }
 };
 
-var isUndefined$3 = inferno.common.isUndefined;
-var isNull$6 = inferno.common.isNull;
 var recyclingEnabled = true;
 var vComponentPools = new Map();
 function disableRecycling() {
@@ -35,9 +33,9 @@ function recycleOptVElement(optVElement, lifecycle, context, isSVG, shallowUnmou
     var bp = optVElement.bp;
     var key = optVElement.key;
     var pool = key === null ? bp.pools.nonKeyed : bp.pools.keyed.get(key);
-    if (!isUndefined$3(pool)) {
+    if (!inferno.isUndefined(pool)) {
         var recycledOptVElement = pool.pop();
-        if (!isUndefined$3(recycledOptVElement)) {
+        if (!inferno.isUndefined(recycledOptVElement)) {
             patchOptVElement(recycledOptVElement, optVElement, null, lifecycle, context, isSVG, shallowUnmount);
             return optVElement.dom;
         }
@@ -48,12 +46,12 @@ function poolOptVElement(optVElement) {
     var bp = optVElement.bp;
     var key = optVElement.key;
     var pools = bp.pools;
-    if (isNull$6(key)) {
+    if (inferno.isNull(key)) {
         pools.nonKeyed.push(optVElement);
     }
     else {
         var pool = pools.keyed.get(key);
-        if (isUndefined$3(pool)) {
+        if (inferno.isUndefined(pool)) {
             pool = [];
             pools.keyed.set(key, pool);
         }
@@ -64,11 +62,11 @@ function recycleVComponent(vComponent, lifecycle, context, isSVG, shallowUnmount
     var component = vComponent.component;
     var key = vComponent.key;
     var pools = vComponentPools.get(component);
-    if (!isUndefined$3(pools)) {
+    if (!inferno.isUndefined(pools)) {
         var pool = key === null ? pools.nonKeyed : pools.keyed.get(key);
-        if (!isUndefined$3(pool)) {
+        if (!inferno.isUndefined(pool)) {
             var recycledVComponent = pool.pop();
-            if (!isUndefined$3(recycledVComponent)) {
+            if (!inferno.isUndefined(recycledVComponent)) {
                 var failed = patchVComponent(recycledVComponent, vComponent, null, lifecycle, context, isSVG, shallowUnmount);
                 if (!failed) {
                     return vComponent.dom;
@@ -91,19 +89,19 @@ function poolVComponent(vComponent) {
         return;
     }
     var pools = vComponentPools.get(component);
-    if (isUndefined$3(pools)) {
+    if (inferno.isUndefined(pools)) {
         pools = {
             nonKeyed: [],
             keyed: new Map()
         };
         vComponentPools.set(component, pools);
     }
-    if (isNull$6(key)) {
+    if (inferno.isNull(key)) {
         pools.nonKeyed.push(vComponent);
     }
     else {
         var pool = pools.keyed.get(key);
-        if (isUndefined$3(pool)) {
+        if (inferno.isUndefined(pool)) {
             pool = [];
             pools.keyed.set(key, pool);
         }
@@ -111,15 +109,8 @@ function poolVComponent(vComponent) {
     }
 }
 
-var isNullOrUndef$5 = inferno.common.isNullOrUndef;
-var isArray$4 = inferno.common.isArray;
-var isNull$5 = inferno.common.isNull;
-var isInvalid$5 = inferno.common.isInvalid;
-var isFunction$1 = inferno.common.isFunction;
-var throwError$4 = inferno.common.throwError;
-var isObject$1 = inferno.common.isObject;
-function unmount$1(input, parentDom, lifecycle, canRecycle, shallowUnmount) {
-    if (!isInvalid$5(input)) {
+function unmount(input, parentDom, lifecycle, canRecycle, shallowUnmount) {
+    if (!inferno.isInvalid(input)) {
         if (inferno.isOptVElement(input)) {
             unmountOptVElement(input, parentDom, lifecycle, canRecycle, shallowUnmount);
         }
@@ -154,19 +145,19 @@ function unmountOptVElement(optVElement, parentDom, lifecycle, canRecycle, shall
     var bp = optVElement.bp;
     var bp0 = bp.v0;
     if (!shallowUnmount) {
-        if (!isNull$5(bp0)) {
+        if (!inferno.isNull(bp0)) {
             unmountOptVElementValue(optVElement, bp0, optVElement.v0, lifecycle, shallowUnmount);
             var bp1 = bp.v1;
-            if (!isNull$5(bp1)) {
+            if (!inferno.isNull(bp1)) {
                 unmountOptVElementValue(optVElement, bp1, optVElement.v1, lifecycle, shallowUnmount);
                 var bp2 = bp.v2;
-                if (!isNull$5(bp2)) {
+                if (!inferno.isNull(bp2)) {
                     unmountOptVElementValue(optVElement, bp2, optVElement.v2, lifecycle, shallowUnmount);
                 }
             }
         }
     }
-    if (!isNull$5(parentDom)) {
+    if (!inferno.isNull(parentDom)) {
         parentDom.removeChild(optVElement.dom);
     }
     if (recyclingEnabled && (parentDom || canRecycle)) {
@@ -198,7 +189,7 @@ function unmountVFragment(vFragment, parentDom, removePointer, lifecycle, shallo
                 unmountVFragment(child, parentDom, true, lifecycle, false);
             }
             else {
-                unmount$1(child, parentDom, lifecycle, false, shallowUnmount);
+                unmount(child, parentDom, lifecycle, false, shallowUnmount);
             }
         }
     }
@@ -211,7 +202,7 @@ function unmountVComponent(vComponent, parentDom, lifecycle, canRecycle, shallow
     if (!shallowUnmount) {
         var instanceHooks = null;
         vComponent.unmounted = true;
-        if (!isNullOrUndef$5(instance)) {
+        if (!inferno.isNullOrUndef(instance)) {
             var ref = vComponent.ref;
             if (ref) {
                 ref(null);
@@ -221,22 +212,22 @@ function unmountVComponent(vComponent, parentDom, lifecycle, canRecycle, shallow
                 instance.componentWillUnmount();
                 instance._unmounted = true;
                 componentToDOMNodeMap.delete(instance);
-                unmount$1(instance._lastInput, null, lifecycle, false, shallowUnmount);
+                unmount(instance._lastInput, null, lifecycle, false, shallowUnmount);
             }
             else {
-                unmount$1(instance, null, lifecycle, false, shallowUnmount);
+                unmount(instance, null, lifecycle, false, shallowUnmount);
             }
         }
         var hooks = vComponent.hooks || instanceHooks;
-        if (!isNullOrUndef$5(hooks)) {
-            if (!isNullOrUndef$5(hooks.onComponentWillUnmount)) {
+        if (!inferno.isNullOrUndef(hooks)) {
+            if (!inferno.isNullOrUndef(hooks.onComponentWillUnmount)) {
                 hooks.onComponentWillUnmount();
             }
         }
     }
     if (parentDom) {
         var lastInput = instance._lastInput;
-        if (isNullOrUndef$5(lastInput)) {
+        if (inferno.isNullOrUndef(lastInput)) {
             lastInput = instance;
         }
         if (inferno.isVFragment(lastInput)) {
@@ -258,7 +249,7 @@ function unmountVElement(vElement, parentDom, lifecycle, shallowUnmount) {
             unmountRef(ref);
         }
         var children = vElement.children;
-        if (!isNullOrUndef$5(children)) {
+        if (!inferno.isNullOrUndef(children)) {
             unmountChildren(children, lifecycle, shallowUnmount);
         }
     }
@@ -267,30 +258,30 @@ function unmountVElement(vElement, parentDom, lifecycle, shallowUnmount) {
     }
 }
 function unmountChildren(children, lifecycle, shallowUnmount) {
-    if (isArray$4(children)) {
+    if (inferno.isArray(children)) {
         for (var i = 0; i < children.length; i++) {
             var child = children[i];
-            if (isObject$1(child)) {
-                unmount$1(child, null, lifecycle, false, shallowUnmount);
+            if (inferno.isObject(child)) {
+                unmount(child, null, lifecycle, false, shallowUnmount);
             }
         }
     }
-    else if (isObject$1(children)) {
-        unmount$1(children, null, lifecycle, false, shallowUnmount);
+    else if (inferno.isObject(children)) {
+        unmount(children, null, lifecycle, false, shallowUnmount);
     }
 }
 function unmountRef(ref) {
-    if (isFunction$1(ref)) {
+    if (inferno.isFunction(ref)) {
         ref(null);
     }
     else {
-        if (isInvalid$5(ref)) {
+        if (inferno.isInvalid(ref)) {
             return;
         }
         if (process.env.NODE_ENV !== 'production') {
-            throwError$4('string "refs" are not supported in Inferno 0.8+. Use callback "refs" instead.');
+            inferno.throwError('string "refs" are not supported in Inferno 0.8+. Use callback "refs" instead.');
         }
-        throwError$4();
+        inferno.throwError();
     }
 }
 function unmountProps(props, lifecycle) {
@@ -322,9 +313,6 @@ constructDefaults('volume,value,defaultValue,defaultChecked', strictProps, true)
 constructDefaults('muted,scoped,loop,open,checked,default,capture,disabled,selected,readonly,multiple,required,autoplay,controls,seamless,reversed,allowfullscreen,novalidate', booleanProps, true);
 constructDefaults('animationIterationCount,borderImageOutset,borderImageSlice,borderImageWidth,boxFlex,boxFlexGroup,boxOrdinalGroup,columnCount,flex,flexGrow,flexPositive,flexShrink,flexNegative,flexOrder,gridRow,gridColumn,fontWeight,lineClamp,lineHeight,opacity,order,orphans,tabSize,widows,zIndex,zoom,fillOpacity,floodOpacity,stopOpacity,strokeDasharray,strokeDashoffset,strokeMiterlimit,strokeOpacity,strokeWidth,', isUnitlessNumber, true);
 
-var isFunction$2 = inferno.common.isFunction;
-var isNull$7 = inferno.common.isNull;
-var isUndefined$4 = inferno.common.isUndefined;
 var devToolsStatus = {
     connected: false
 };
@@ -338,11 +326,11 @@ function getIncrementalId() {
 function sendToDevTools(global, data) {
     var event = new CustomEvent('inferno.client.message', {
         detail: JSON.stringify(data, function (key, val) {
-            if (!isNull$7(val) && !isUndefined$4(val)) {
-                if (key === '_vComponent' || !isUndefined$4(val.nodeType)) {
+            if (!inferno.isNull(val) && !inferno.isUndefined(val)) {
+                if (key === '_vComponent' || !inferno.isUndefined(val.nodeType)) {
                     return;
                 }
-                else if (isFunction$2(val)) {
+                else if (inferno.isFunction(val)) {
                     return ("$$f:" + (val.name));
                 }
             }
@@ -380,26 +368,9 @@ function sendRoots(global) {
     sendToDevTools(global, { type: 'roots', data: roots });
 }
 
-var isNullOrUndef$4 = inferno.common.isNullOrUndef;
-var isUndefined$2 = inferno.common.isUndefined;
-var isNull$4 = inferno.common.isNull;
-var isString$2 = inferno.common.isString;
-var isStatefulComponent$2 = inferno.common.isStatefulComponent;
-var isStringOrNumber$3 = inferno.common.isStringOrNumber;
-var isInvalid$4 = inferno.common.isInvalid;
-var NO_OP$1 = inferno.common.NO_OP;
-var isNumber = inferno.common.isNumber;
-var isArray$3 = inferno.common.isArray;
-var isAttrAnEvent = inferno.common.isAttrAnEvent;
-var throwError$3 = inferno.common.throwError;
-var isKeyedListChildrenType$2 = inferno.common.isKeyedListChildrenType;
-var isNonKeyedListChildrenType$2 = inferno.common.isNonKeyedListChildrenType;
-var isNodeChildrenType$2 = inferno.common.isNodeChildrenType;
-var isTextChildrenType$2 = inferno.common.isTextChildrenType;
-var isUnknownChildrenType$2 = inferno.common.isUnknownChildrenType;
 function replaceLastChildAndUnmount(lastInput, nextInput, parentDom, lifecycle, context, isSVG, shallowUnmount) {
     replaceChild(parentDom, mount(nextInput, null, lifecycle, context, isSVG, shallowUnmount), lastInput.dom);
-    unmount$1(lastInput, null, lifecycle, false, shallowUnmount);
+    unmount(lastInput, null, lifecycle, false, shallowUnmount);
 }
 function patch(lastInput, nextInput, parentDom, lifecycle, context, isSVG, shallowUnmount) {
     if (lastInput !== nextInput) {
@@ -471,9 +442,9 @@ function patch(lastInput, nextInput, parentDom, lifecycle, context, isSVG, shall
         }
         else {
             if (process.env.NODE_ENV !== 'production') {
-                throwError$3('bad input argument called on patch(). Input argument may need normalising.');
+                inferno.throwError('bad input argument called on patch(). Input argument may need normalising.');
             }
-            throwError$3();
+            inferno.throwError();
         }
     }
 }
@@ -519,7 +490,7 @@ function patchOptVElement(lastOptVElement, nextOptVElement, parentDom, lifecycle
     if (lastBp !== nextBp) {
         var newDom = mountOptVElement(nextOptVElement, null, lifecycle, context, isSVG, shallowUnmount);
         replaceChild(parentDom, newDom, dom);
-        unmount$1(lastOptVElement, null, lifecycle, true, shallowUnmount);
+        unmount(lastOptVElement, null, lifecycle, true, shallowUnmount);
     }
     else {
         var bp0 = nextBp.v0;
@@ -540,28 +511,28 @@ function patchOptVElement(lastOptVElement, nextOptVElement, parentDom, lifecycle
             // worry about
             ignoreDiff = true;
         }
-        if (!isNull$4(bp0)) {
+        if (!inferno.isNull(bp0)) {
             var lastV0 = lastOptVElement.v0;
             var nextV0 = nextOptVElement.v0;
             var bp1 = nextBp.v1;
             if (lastV0 !== nextV0 || ignoreDiff) {
                 patchOptVElementValue(nextOptVElement, bp0, lastV0, nextV0, nextBp.d0, dom, lifecycle, context, isSVG, shallowUnmount);
             }
-            if (!isNull$4(bp1)) {
+            if (!inferno.isNull(bp1)) {
                 var lastV1 = lastOptVElement.v1;
                 var nextV1 = nextOptVElement.v1;
                 var bp2 = nextBp.v2;
                 if (lastV1 !== nextV1 || ignoreDiff) {
                     patchOptVElementValue(nextOptVElement, bp1, lastV1, nextV1, nextBp.d1, dom, lifecycle, context, isSVG, shallowUnmount);
                 }
-                if (!isNull$4(bp2)) {
+                if (!inferno.isNull(bp2)) {
                     var lastV2 = lastOptVElement.v2;
                     var nextV2 = nextOptVElement.v2;
                     var bp3 = nextBp.v3;
                     if (lastV2 !== nextV2 || ignoreDiff) {
                         patchOptVElementValue(nextOptVElement, bp2, lastV2, nextV2, nextBp.d2, dom, lifecycle, context, isSVG, shallowUnmount);
                     }
-                    if (!isNull$4(bp3)) {
+                    if (!inferno.isNull(bp3)) {
                         var d3 = nextBp.d3;
                         var lastV3s = lastOptVElement.v3;
                         var nextV3s = nextOptVElement.v3;
@@ -587,7 +558,7 @@ function patchOptVElementValue(optVElement, valueType, lastValue, nextValue, des
             patchChildren(descriptor, lastValue, nextValue, dom, lifecycle, context, isSVG, shallowUnmount);
             break;
         case inferno.ValueTypes.PROP_CLASS_NAME:
-            if (isNullOrUndef$4(nextValue)) {
+            if (inferno.isNullOrUndef(nextValue)) {
                 dom.removeAttribute('class');
             }
             else {
@@ -606,7 +577,7 @@ function patchOptVElementValue(optVElement, valueType, lastValue, nextValue, des
             patchStyle(lastValue, nextValue, dom);
             break;
         case inferno.ValueTypes.PROP_VALUE:
-            dom.value = isNullOrUndef$4(nextValue) ? '' : nextValue;
+            dom.value = inferno.isNullOrUndef(nextValue) ? '' : nextValue;
             break;
         case inferno.ValueTypes.PROP:
             patchProp(descriptor, lastValue, nextValue, dom, isSVG);
@@ -618,45 +589,45 @@ function patchOptVElementValue(optVElement, valueType, lastValue, nextValue, des
     }
 }
 function patchChildren(childrenType, lastChildren, nextChildren, parentDom, lifecycle, context, isSVG, shallowUnmount) {
-    if (isTextChildrenType$2(childrenType)) {
+    if (inferno.isTextChildrenType(childrenType)) {
         updateTextContent(parentDom, nextChildren);
     }
-    else if (isNodeChildrenType$2(childrenType)) {
+    else if (inferno.isNodeChildrenType(childrenType)) {
         patch(lastChildren, nextChildren, parentDom, lifecycle, context, isSVG, shallowUnmount);
     }
-    else if (isKeyedListChildrenType$2(childrenType)) {
+    else if (inferno.isKeyedListChildrenType(childrenType)) {
         patchKeyedChildren(lastChildren, nextChildren, parentDom, lifecycle, context, isSVG, null, shallowUnmount);
     }
-    else if (isNonKeyedListChildrenType$2(childrenType)) {
+    else if (inferno.isNonKeyedListChildrenType(childrenType)) {
         patchNonKeyedChildren(lastChildren, nextChildren, parentDom, lifecycle, context, isSVG, null, false, shallowUnmount);
     }
-    else if (isUnknownChildrenType$2(childrenType)) {
+    else if (inferno.isUnknownChildrenType(childrenType)) {
         patchChildrenWithUnknownType(lastChildren, nextChildren, parentDom, lifecycle, context, isSVG, shallowUnmount);
     }
     else {
         if (process.env.NODE_ENV !== 'production') {
-            throwError$3('bad childrenType value specified when attempting to patchChildren.');
+            inferno.throwError('bad childrenType value specified when attempting to patchChildren.');
         }
-        throwError$3();
+        inferno.throwError();
     }
 }
 function patchChildrenWithUnknownType(lastChildren, nextChildren, parentDom, lifecycle, context, isSVG, shallowUnmount) {
-    if (isInvalid$4(nextChildren)) {
-        if (!isInvalid$4(lastChildren)) {
+    if (inferno.isInvalid(nextChildren)) {
+        if (!inferno.isInvalid(lastChildren)) {
             if (inferno.isVNode(lastChildren)) {
-                unmount$1(lastChildren, parentDom, lifecycle, true, shallowUnmount);
+                unmount(lastChildren, parentDom, lifecycle, true, shallowUnmount);
             }
             else {
                 removeAllChildren(parentDom, lastChildren, lifecycle, shallowUnmount);
             }
         }
     }
-    else if (isInvalid$4(lastChildren)) {
-        if (isStringOrNumber$3(nextChildren)) {
+    else if (inferno.isInvalid(lastChildren)) {
+        if (inferno.isStringOrNumber(nextChildren)) {
             setTextContent(parentDom, nextChildren);
         }
-        else if (!isInvalid$4(nextChildren)) {
-            if (isArray$3(nextChildren)) {
+        else if (!inferno.isInvalid(nextChildren)) {
+            if (inferno.isArray(nextChildren)) {
                 mountArrayChildrenWithoutType(nextChildren, parentDom, lifecycle, context, isSVG, shallowUnmount);
             }
             else {
@@ -667,21 +638,21 @@ function patchChildrenWithUnknownType(lastChildren, nextChildren, parentDom, lif
     else if (inferno.isVNode(lastChildren) && inferno.isVNode(nextChildren)) {
         patch(lastChildren, nextChildren, parentDom, lifecycle, context, isSVG, shallowUnmount);
     }
-    else if (isStringOrNumber$3(nextChildren)) {
-        if (isStringOrNumber$3(lastChildren)) {
+    else if (inferno.isStringOrNumber(nextChildren)) {
+        if (inferno.isStringOrNumber(lastChildren)) {
             updateTextContent(parentDom, nextChildren);
         }
         else {
             setTextContent(parentDom, nextChildren);
         }
     }
-    else if (isStringOrNumber$3(lastChildren)) {
+    else if (inferno.isStringOrNumber(lastChildren)) {
         var child = normalise(lastChildren);
         child.dom = parentDom.firstChild;
         patchChildrenWithUnknownType(child, nextChildren, parentDom, lifecycle, context, isSVG, shallowUnmount);
     }
-    else if (isArray$3(nextChildren)) {
-        if (isArray$3(lastChildren)) {
+    else if (inferno.isArray(nextChildren)) {
+        if (inferno.isArray(lastChildren)) {
             nextChildren.complex = lastChildren.complex;
             if (isKeyed(lastChildren, nextChildren)) {
                 patchKeyedChildren(lastChildren, nextChildren, parentDom, lifecycle, context, isSVG, null, shallowUnmount);
@@ -694,14 +665,14 @@ function patchChildrenWithUnknownType(lastChildren, nextChildren, parentDom, lif
             patchNonKeyedChildren([lastChildren], nextChildren, parentDom, lifecycle, context, isSVG, null, true, shallowUnmount);
         }
     }
-    else if (isArray$3(lastChildren)) {
+    else if (inferno.isArray(lastChildren)) {
         patchNonKeyedChildren(lastChildren, [nextChildren], parentDom, lifecycle, context, isSVG, null, true, shallowUnmount);
     }
     else {
         if (process.env.NODE_ENV !== 'production') {
-            throwError$3('bad input argument called on patchChildrenWithUnknownType(). Input argument may need normalising.');
+            inferno.throwError('bad input argument called on patchChildrenWithUnknownType(). Input argument may need normalising.');
         }
-        throwError$3();
+        inferno.throwError();
     }
 }
 function patchVComponent(lastVComponent, nextVComponent, parentDom, lifecycle, context, isSVG, shallowUnmount) {
@@ -709,9 +680,9 @@ function patchVComponent(lastVComponent, nextVComponent, parentDom, lifecycle, c
     var nextComponent = nextVComponent.component;
     var nextProps = nextVComponent.props || {};
     if (lastComponent !== nextComponent) {
-        if (isStatefulComponent$2(nextVComponent)) {
+        if (inferno.isStatefulComponent(nextVComponent)) {
             var defaultProps = nextComponent.defaultProps;
-            if (!isUndefined$2(defaultProps)) {
+            if (!inferno.isUndefined(defaultProps)) {
                 nextVComponent.props = copyPropsTo(defaultProps, nextProps);
             }
             var lastInstance = lastVComponent.instance;
@@ -735,13 +706,13 @@ function patchVComponent(lastVComponent, nextVComponent, parentDom, lifecycle, c
             nextVComponent.instance = nextInput$1;
             mountStatelessComponentCallbacks(nextVComponent.hooks, dom, lifecycle);
         }
-        unmount$1(lastVComponent, null, lifecycle, false, shallowUnmount);
+        unmount(lastVComponent, null, lifecycle, false, shallowUnmount);
     }
     else {
-        if (isStatefulComponent$2(nextVComponent)) {
+        if (inferno.isStatefulComponent(nextVComponent)) {
             var instance = lastVComponent.instance;
             if (instance._unmounted) {
-                if (isNull$4(parentDom)) {
+                if (inferno.isNull(parentDom)) {
                     return true;
                 }
                 replaceChild(parentDom, mountVComponent(nextVComponent, null, lifecycle, context, isSVG, shallowUnmount), lastVComponent.dom);
@@ -752,7 +723,7 @@ function patchVComponent(lastVComponent, nextVComponent, parentDom, lifecycle, c
                 if (instance._devToolsStatus.connected && !instance._devToolsId) {
                     componentIdMap.set(instance._devToolsId = getIncrementalId(), instance);
                 }
-                if (!isUndefined$2(defaultProps$1)) {
+                if (!inferno.isUndefined(defaultProps$1)) {
                     copyPropsTo(lastProps, nextProps);
                     nextVComponent.props = nextProps;
                 }
@@ -761,7 +732,7 @@ function patchVComponent(lastVComponent, nextVComponent, parentDom, lifecycle, c
                 var childContext = instance.getChildContext();
                 nextVComponent.instance = instance;
                 instance._isSVG = isSVG;
-                if (!isNullOrUndef$4(childContext)) {
+                if (!inferno.isNullOrUndef(childContext)) {
                     childContext = Object.assign({}, context, childContext);
                 }
                 else {
@@ -771,13 +742,13 @@ function patchVComponent(lastVComponent, nextVComponent, parentDom, lifecycle, c
                 var nextInput$2 = instance._updateComponent(lastState, nextState, lastProps, nextProps, context, false);
                 var didUpdate = true;
                 instance._childContext = childContext;
-                if (isInvalid$4(nextInput$2)) {
+                if (inferno.isInvalid(nextInput$2)) {
                     nextInput$2 = inferno.createVPlaceholder();
                 }
-                else if (isArray$3(nextInput$2)) {
+                else if (inferno.isArray(nextInput$2)) {
                     nextInput$2 = inferno.createVFragment(nextInput$2, null);
                 }
-                else if (nextInput$2 === NO_OP$1) {
+                else if (nextInput$2 === inferno.NO_OP) {
                     nextInput$2 = lastInput$2;
                     didUpdate = false;
                 }
@@ -796,30 +767,30 @@ function patchVComponent(lastVComponent, nextVComponent, parentDom, lifecycle, c
             var shouldUpdate = true;
             var lastProps$1 = lastVComponent.props;
             var nextHooks = nextVComponent.hooks;
-            var nextHooksDefined = !isNullOrUndef$4(nextHooks);
+            var nextHooksDefined = !inferno.isNullOrUndef(nextHooks);
             var lastInput$3 = lastVComponent.instance;
             nextVComponent.dom = lastVComponent.dom;
             nextVComponent.instance = lastInput$3;
-            if (nextHooksDefined && !isNullOrUndef$4(nextHooks.onComponentShouldUpdate)) {
+            if (nextHooksDefined && !inferno.isNullOrUndef(nextHooks.onComponentShouldUpdate)) {
                 shouldUpdate = nextHooks.onComponentShouldUpdate(lastProps$1, nextProps);
             }
             if (shouldUpdate !== false) {
-                if (nextHooksDefined && !isNullOrUndef$4(nextHooks.onComponentWillUpdate)) {
+                if (nextHooksDefined && !inferno.isNullOrUndef(nextHooks.onComponentWillUpdate)) {
                     nextHooks.onComponentWillUpdate(lastProps$1, nextProps);
                 }
                 var nextInput$3 = nextComponent(nextProps, context);
-                if (isInvalid$4(nextInput$3)) {
+                if (inferno.isInvalid(nextInput$3)) {
                     nextInput$3 = inferno.createVPlaceholder();
                 }
-                else if (isArray$3(nextInput$3)) {
+                else if (inferno.isArray(nextInput$3)) {
                     nextInput$3 = inferno.createVFragment(nextInput$3, null);
                 }
-                else if (nextInput$3 === NO_OP$1) {
+                else if (nextInput$3 === inferno.NO_OP) {
                     return false;
                 }
                 patch(lastInput$3, nextInput$3, parentDom, lifecycle, context, isSVG, shallowUnmount);
                 nextVComponent.instance = nextInput$3;
-                if (nextHooksDefined && !isNullOrUndef$4(nextHooks.onComponentDidUpdate)) {
+                if (nextHooksDefined && !inferno.isNullOrUndef(nextHooks.onComponentDidUpdate)) {
                     nextHooks.onComponentDidUpdate(lastProps$1, nextProps);
                 }
             }
@@ -848,10 +819,10 @@ function patchVFragment(lastVFragment, nextVFragment, parentDom, lifecycle, cont
         var lastChildrenType = lastVFragment.childrenType;
         var nextChildrenType = nextVFragment.childrenType;
         if (lastChildrenType === nextChildrenType) {
-            if (isKeyedListChildrenType$2(nextChildrenType)) {
+            if (inferno.isKeyedListChildrenType(nextChildrenType)) {
                 return patchKeyedChildren(lastChildren, nextChildren, parentDom, lifecycle, context, isSVG, nextVFragment, shallowUnmount);
             }
-            else if (isNonKeyedListChildrenType$2(nextChildrenType)) {
+            else if (inferno.isNonKeyedListChildrenType(nextChildrenType)) {
                 return patchNonKeyedChildren(lastChildren, nextChildren, parentDom, lifecycle, context, isSVG, nextVFragment, false, shallowUnmount);
             }
         }
@@ -881,7 +852,7 @@ function patchNonKeyedChildren(lastChildren, nextChildren, dom, lifecycle, conte
     }
     else if (lastChildrenLength > nextChildrenLength) {
         for (i = commonLength; i < lastChildrenLength; i++) {
-            unmount$1(lastChildren[i], dom, lifecycle, false, shallowUnmount);
+            unmount(lastChildren[i], dom, lifecycle, false, shallowUnmount);
         }
     }
 }
@@ -983,7 +954,7 @@ function patchKeyedChildren(a, b, dom, lifecycle, context, isSVG, parentVList, s
     }
     else if (bStart > bEnd) {
         while (aStart <= aEnd) {
-            unmount$1(a[aStart++], dom, lifecycle, false, shallowUnmount);
+            unmount(a[aStart++], dom, lifecycle, false, shallowUnmount);
         }
     }
     else {
@@ -1031,7 +1002,7 @@ function patchKeyedChildren(a, b, dom, lifecycle, context, isSVG, parentVList, s
                 aNode = a[i];
                 if (patched < bLength) {
                     j = keyIndex.get(aNode.key);
-                    if (!isUndefined$2(j)) {
+                    if (!inferno.isUndefined(j)) {
                         bNode = b[j];
                         sources[j - bStart] = i;
                         if (pos > j) {
@@ -1057,8 +1028,8 @@ function patchKeyedChildren(a, b, dom, lifecycle, context, isSVG, parentVList, s
             i = aLength - patched;
             while (i > 0) {
                 aNode = aNullable[aStart++];
-                if (!isNull$4(aNode)) {
-                    unmount$1(aNode, dom, lifecycle, false, shallowUnmount);
+                if (!inferno.isNull(aNode)) {
+                    unmount(aNode, dom, lifecycle, false, shallowUnmount);
                     i--;
                 }
             }
@@ -1153,14 +1124,14 @@ function patchProp(prop, lastValue, nextValue, dom, isSVG) {
         return;
     }
     if (strictProps[prop]) {
-        dom[prop] = isNullOrUndef$4(nextValue) ? '' : nextValue;
+        dom[prop] = inferno.isNullOrUndef(nextValue) ? '' : nextValue;
     }
     else if (booleanProps[prop]) {
         dom[prop] = nextValue ? true : false;
     }
     else {
         if (lastValue !== nextValue) {
-            if (isNullOrUndef$4(nextValue)) {
+            if (inferno.isNullOrUndef(nextValue)) {
                 dom.removeAttribute(prop);
                 return false;
             }
@@ -1176,17 +1147,17 @@ function patchProp(prop, lastValue, nextValue, dom, isSVG) {
             else if (prop === 'style') {
                 patchStyle(lastValue, nextValue, dom);
             }
-            else if (isAttrAnEvent(prop)) {
+            else if (inferno.isAttrAnEvent(prop)) {
                 dom[prop.toLowerCase()] = nextValue;
             }
             else if (prop === 'dangerouslySetInnerHTML') {
                 var lastHtml = lastValue && lastValue.__html;
                 var nextHtml = nextValue && nextValue.__html;
-                if (isNullOrUndef$4(nextHtml)) {
+                if (inferno.isNullOrUndef(nextHtml)) {
                     if (process.env.NODE_ENV !== 'production') {
-                        throwError$3('dangerouslySetInnerHTML requires an object with a __html propety containing the innerHTML content.');
+                        inferno.throwError('dangerouslySetInnerHTML requires an object with a __html propety containing the innerHTML content.');
                     }
-                    throwError$3();
+                    inferno.throwError();
                 }
                 if (lastHtml !== nextHtml) {
                     dom.innerHTML = nextHtml;
@@ -1219,7 +1190,7 @@ function patchProps(vNode, lastProps, nextProps, dom, shallowUnmount, isSpread, 
         if (prop === 'value') {
             formValue = nextValue;
         }
-        if (isNullOrUndef$4(nextValue)) {
+        if (inferno.isNullOrUndef(nextValue)) {
             removeProp(prop, dom);
         }
         else if (prop === 'children') {
@@ -1235,21 +1206,21 @@ function patchProps(vNode, lastProps, nextProps, dom, shallowUnmount, isSpread, 
         }
     }
     for (var prop$1 in lastProps) {
-        if (isNullOrUndef$4(nextProps[prop$1])) {
+        if (inferno.isNullOrUndef(nextProps[prop$1])) {
             removeProp(prop$1, dom);
         }
     }
     return formValue;
 }
 function patchStyle(lastAttrValue, nextAttrValue, dom) {
-    if (isString$2(nextAttrValue)) {
+    if (inferno.isString(nextAttrValue)) {
         dom.style.cssText = nextAttrValue;
     }
-    else if (isNullOrUndef$4(lastAttrValue)) {
-        if (!isNullOrUndef$4(nextAttrValue)) {
+    else if (inferno.isNullOrUndef(lastAttrValue)) {
+        if (!inferno.isNullOrUndef(nextAttrValue)) {
             for (var style in nextAttrValue) {
                 var value = nextAttrValue[style];
-                if (isNumber(value) && !isUnitlessNumber[style]) {
+                if (inferno.isNumber(value) && !isUnitlessNumber[style]) {
                     dom.style[style] = value + 'px';
                 }
                 else {
@@ -1258,13 +1229,13 @@ function patchStyle(lastAttrValue, nextAttrValue, dom) {
             }
         }
     }
-    else if (isNullOrUndef$4(nextAttrValue)) {
+    else if (inferno.isNullOrUndef(nextAttrValue)) {
         dom.removeAttribute('style');
     }
     else {
         for (var style$1 in nextAttrValue) {
             var value$1 = nextAttrValue[style$1];
-            if (isNumber(value$1) && !isUnitlessNumber[style$1]) {
+            if (inferno.isNumber(value$1) && !isUnitlessNumber[style$1]) {
                 dom.style[style$1] = value$1 + 'px';
             }
             else {
@@ -1272,7 +1243,7 @@ function patchStyle(lastAttrValue, nextAttrValue, dom) {
             }
         }
         for (var style$2 in lastAttrValue) {
-            if (isNullOrUndef$4(nextAttrValue[style$2])) {
+            if (inferno.isNullOrUndef(nextAttrValue[style$2])) {
                 dom.style[style$2] = '';
             }
         }
@@ -1290,22 +1261,17 @@ function removeProp(prop, dom) {
     }
 }
 
-var isBrowser$1 = inferno.common.isBrowser;
-var isNull$8 = inferno.common.isNull;
-var isArray$5 = inferno.common.isArray;
-var isStringOrNumber$4 = inferno.common.isStringOrNumber;
-var isInvalid$6 = inferno.common.isInvalid;
 function mountStaticChildren(children, dom, isSVG) {
-    if (isArray$5(children)) {
+    if (inferno.isArray(children)) {
         for (var i = 0; i < children.length; i++) {
             var child = children[i];
             mountStaticChildren(child, dom, isSVG);
         }
     }
-    else if (isStringOrNumber$4(children)) {
+    else if (inferno.isStringOrNumber(children)) {
         dom.appendChild(document.createTextNode(children));
     }
-    else if (!isInvalid$6(children)) {
+    else if (!inferno.isInvalid(children)) {
         mountStaticNode(children, dom, isSVG);
     }
 }
@@ -1316,11 +1282,11 @@ function mountStaticNode(node, parentDom, isSVG) {
     }
     var dom = documentCreateElement(tag, isSVG);
     var children = node.children;
-    if (!isNull$8(children)) {
+    if (!inferno.isNull(children)) {
         mountStaticChildren(children, dom, isSVG);
     }
     var props = node.props;
-    if (!isNull$8(props)) {
+    if (!inferno.isNull(props)) {
         for (var prop in props) {
             if (!props.hasOwnProperty(prop)) {
                 continue;
@@ -1334,7 +1300,7 @@ function mountStaticNode(node, parentDom, isSVG) {
     return dom;
 }
 function createStaticVElementClone(bp, isSVG) {
-    if (!isBrowser$1) {
+    if (!inferno.isBrowser) {
         return null;
     }
     var staticNode = bp.staticVElement;
@@ -1348,22 +1314,6 @@ function createStaticVElementClone(bp, isSVG) {
     return dom.cloneNode(true);
 }
 
-var isArray$2 = inferno.common.isArray;
-var isStringOrNumber$2 = inferno.common.isStringOrNumber;
-var isFunction = inferno.common.isFunction;
-var isNullOrUndef$3 = inferno.common.isNullOrUndef;
-var isStatefulComponent$1 = inferno.common.isStatefulComponent;
-var isString$1 = inferno.common.isString;
-var isInvalid$3 = inferno.common.isInvalid;
-var isNull$3 = inferno.common.isNull;
-var throwError$2 = inferno.common.throwError;
-var isUndefined$1 = inferno.common.isUndefined;
-var EMPTY_OBJ = inferno.common.EMPTY_OBJ;
-var isTextChildrenType$1 = inferno.common.isTextChildrenType;
-var isNodeChildrenType$1 = inferno.common.isNodeChildrenType;
-var isKeyedListChildrenType$1 = inferno.common.isKeyedListChildrenType;
-var isNonKeyedListChildrenType$1 = inferno.common.isNonKeyedListChildrenType;
-var isUnknownChildrenType$1 = inferno.common.isUnknownChildrenType;
 function mount(input, parentDom, lifecycle, context, isSVG, shallowUnmount) {
     if (inferno.isOptVElement(input)) {
         return mountOptVElement(input, parentDom, lifecycle, context, isSVG, shallowUnmount);
@@ -1385,9 +1335,9 @@ function mount(input, parentDom, lifecycle, context, isSVG, shallowUnmount) {
     }
     else {
         if (process.env.NODE_ENV !== 'production') {
-            throwError$2('bad input argument called on mount(). Input argument may need normalising.');
+            inferno.throwError('bad input argument called on mount(). Input argument may need normalising.');
         }
-        throwError$2();
+        inferno.throwError();
     }
 }
 function mountVPlaceholder(vPlaceholder, parentDom) {
@@ -1400,11 +1350,11 @@ function mountVPlaceholder(vPlaceholder, parentDom) {
 }
 function mountVElement(vElement, parentDom, lifecycle, context, isSVG, shallowUnmount) {
     var tag = vElement.tag;
-    if (!isString$1(tag)) {
+    if (!inferno.isString(tag)) {
         if (process.env.NODE_ENV !== 'production') {
-            throwError$2('expects VElement to have a string as the tag name');
+            inferno.throwError('expects VElement to have a string as the tag name');
         }
-        throwError$2();
+        inferno.throwError();
     }
     if (tag === 'svg') {
         isSVG = true;
@@ -1413,22 +1363,22 @@ function mountVElement(vElement, parentDom, lifecycle, context, isSVG, shallowUn
     var children = vElement.children;
     var props = vElement.props;
     var ref = vElement.ref;
-    var hasProps = !isNullOrUndef$3(props);
+    var hasProps = !inferno.isNullOrUndef(props);
     var formValue;
     vElement.dom = dom;
-    if (!isNullOrUndef$3(ref)) {
+    if (!inferno.isNullOrUndef(ref)) {
         mountRef(dom, ref, lifecycle);
     }
     if (hasProps) {
         formValue = mountProps(vElement, props, dom, lifecycle, context, isSVG, false, shallowUnmount);
     }
-    if (!isNullOrUndef$3(children)) {
+    if (!inferno.isNullOrUndef(children)) {
         mountChildren(vElement.childrenType, children, dom, lifecycle, context, isSVG, shallowUnmount);
     }
     if (tag === 'select' && formValue) {
         formSelectValue(dom, formValue);
     }
-    if (!isNull$3(parentDom)) {
+    if (!inferno.isNull(parentDom)) {
         appendChild(parentDom, dom);
     }
     return dom;
@@ -1438,10 +1388,10 @@ function mountVFragment(vFragment, parentDom, lifecycle, context, isSVG, shallow
     var pointer = document.createTextNode('');
     var dom = document.createDocumentFragment();
     var childrenType = vFragment.childrenType;
-    if (isKeyedListChildrenType$1(childrenType) || isNonKeyedListChildrenType$1(childrenType)) {
+    if (inferno.isKeyedListChildrenType(childrenType) || inferno.isNonKeyedListChildrenType(childrenType)) {
         mountArrayChildrenWithType(children, dom, lifecycle, context, isSVG, shallowUnmount);
     }
-    else if (isUnknownChildrenType$1(childrenType)) {
+    else if (inferno.isUnknownChildrenType(childrenType)) {
         mountArrayChildrenWithoutType(children, dom, lifecycle, context, isSVG, shallowUnmount);
     }
     vFragment.pointer = pointer;
@@ -1455,7 +1405,7 @@ function mountVFragment(vFragment, parentDom, lifecycle, context, isSVG, shallow
 function mountVText(vText, parentDom) {
     var dom = document.createTextNode(vText.text);
     vText.dom = dom;
-    if (!isNull$3(parentDom)) {
+    if (!inferno.isNull(parentDom)) {
         appendChild(parentDom, dom);
     }
     return dom;
@@ -1467,7 +1417,7 @@ function mountOptVElement(optVElement, parentDom, lifecycle, context, isSVG, sha
         dom = recycleOptVElement(optVElement, lifecycle, context, isSVG, shallowUnmount);
     }
     var tag = bp.staticVElement.tag;
-    if (isNull$3(dom)) {
+    if (inferno.isNull(dom)) {
         if (isSVG || tag === 'svg') {
             isSVG = true;
             dom = (bp.svgClone && bp.svgClone.cloneNode(true)) || createStaticVElementClone(bp, isSVG);
@@ -1477,16 +1427,16 @@ function mountOptVElement(optVElement, parentDom, lifecycle, context, isSVG, sha
         }
         optVElement.dom = dom;
         var bp0 = bp.v0;
-        if (!isNull$3(bp0)) {
+        if (!inferno.isNull(bp0)) {
             mountOptVElementValue(optVElement, bp0, optVElement.v0, bp.d0, dom, lifecycle, context, isSVG, shallowUnmount);
             var bp1 = bp.v1;
-            if (!isNull$3(bp1)) {
+            if (!inferno.isNull(bp1)) {
                 mountOptVElementValue(optVElement, bp1, optVElement.v1, bp.d1, dom, lifecycle, context, isSVG, shallowUnmount);
                 var bp2 = bp.v2;
-                if (!isNull$3(bp2)) {
+                if (!inferno.isNull(bp2)) {
                     mountOptVElementValue(optVElement, bp2, optVElement.v2, bp.d2, dom, lifecycle, context, isSVG, shallowUnmount);
                     var bp3 = bp.v3;
-                    if (!isNull$3(bp3)) {
+                    if (!inferno.isNull(bp3)) {
                         var v3 = optVElement.v3;
                         var d3 = bp.d3;
                         var bp3$1 = bp.v3;
@@ -1501,7 +1451,7 @@ function mountOptVElement(optVElement, parentDom, lifecycle, context, isSVG, sha
             formSelectValue(dom, getPropFromOptElement(optVElement, inferno.ValueTypes.PROP_VALUE));
         }
     }
-    if (!isNull$3(parentDom)) {
+    if (!inferno.isNull(parentDom)) {
         parentDom.appendChild(dom);
     }
     return dom;
@@ -1512,7 +1462,7 @@ function mountOptVElementValue(optVElement, valueType, value, descriptor, dom, l
             mountChildren(descriptor, value, dom, lifecycle, context, isSVG, shallowUnmount);
             break;
         case inferno.ValueTypes.PROP_CLASS_NAME:
-            if (!isNullOrUndef$3(value)) {
+            if (!inferno.isNullOrUndef(value)) {
                 if (isSVG) {
                     dom.setAttribute('class', value);
                 }
@@ -1528,7 +1478,7 @@ function mountOptVElementValue(optVElement, valueType, value, descriptor, dom, l
             patchStyle(null, value, dom);
             break;
         case inferno.ValueTypes.PROP_VALUE:
-            dom.value = isNullOrUndef$3(value) ? '' : value;
+            dom.value = inferno.isNullOrUndef(value) ? '' : value;
             break;
         case inferno.ValueTypes.PROP:
             patchProp(descriptor, null, value, dom, isSVG);
@@ -1543,23 +1493,23 @@ function mountOptVElementValue(optVElement, valueType, value, descriptor, dom, l
     }
 }
 function mountChildren(childrenType, children, dom, lifecycle, context, isSVG, shallowUnmount) {
-    if (isTextChildrenType$1(childrenType)) {
+    if (inferno.isTextChildrenType(childrenType)) {
         setTextContent(dom, children);
     }
-    else if (isNodeChildrenType$1(childrenType)) {
+    else if (inferno.isNodeChildrenType(childrenType)) {
         mount(children, dom, lifecycle, context, isSVG, shallowUnmount);
     }
-    else if (isKeyedListChildrenType$1(childrenType) || isNonKeyedListChildrenType$1(childrenType)) {
+    else if (inferno.isKeyedListChildrenType(childrenType) || inferno.isNonKeyedListChildrenType(childrenType)) {
         mountArrayChildrenWithType(children, dom, lifecycle, context, isSVG, shallowUnmount);
     }
-    else if (isUnknownChildrenType$1(childrenType)) {
+    else if (inferno.isUnknownChildrenType(childrenType)) {
         mountChildrenWithUnknownType(children, dom, lifecycle, context, isSVG, shallowUnmount);
     }
     else {
         if (process.env.NODE_ENV !== 'production') {
-            throwError$2('bad childrenType value specified when attempting to mountChildren.');
+            inferno.throwError('bad childrenType value specified when attempting to mountChildren.');
         }
-        throwError$2();
+        inferno.throwError();
     }
 }
 function mountArrayChildrenWithType(children, dom, lifecycle, context, isSVG, shallowUnmount) {
@@ -1568,13 +1518,13 @@ function mountArrayChildrenWithType(children, dom, lifecycle, context, isSVG, sh
     }
 }
 function mountChildrenWithUnknownType(children, dom, lifecycle, context, isSVG, shallowUnmount) {
-    if (isArray$2(children)) {
+    if (inferno.isArray(children)) {
         mountArrayChildrenWithoutType(children, dom, lifecycle, context, isSVG, shallowUnmount);
     }
-    else if (isStringOrNumber$2(children)) {
+    else if (inferno.isStringOrNumber(children)) {
         setTextContent(dom, children);
     }
-    else if (!isInvalid$3(children)) {
+    else if (!inferno.isInvalid(children)) {
         mount(children, dom, lifecycle, context, isSVG, shallowUnmount);
     }
 }
@@ -1602,35 +1552,35 @@ function mountArrayChildrenWithoutType(children, dom, lifecycle, context, isSVG,
 function mountVComponent(vComponent, parentDom, lifecycle, context, isSVG, shallowUnmount) {
     if (recyclingEnabled) {
         var dom$1 = recycleVComponent(vComponent, lifecycle, context, isSVG, shallowUnmount);
-        if (!isNull$3(dom$1)) {
-            if (!isNull$3(parentDom)) {
+        if (!inferno.isNull(dom$1)) {
+            if (!inferno.isNull(parentDom)) {
                 appendChild(parentDom, dom$1);
             }
             return dom$1;
         }
     }
     var component = vComponent.component;
-    var props = vComponent.props || EMPTY_OBJ;
+    var props = vComponent.props || inferno.EMPTY_OBJ;
     var hooks = vComponent.hooks;
     var ref = vComponent.ref;
     var dom;
-    if (isStatefulComponent$1(vComponent)) {
+    if (inferno.isStatefulComponent(vComponent)) {
         var defaultProps = component.defaultProps;
-        if (!isUndefined$1(defaultProps)) {
+        if (!inferno.isUndefined(defaultProps)) {
             copyPropsTo(defaultProps, props);
             vComponent.props = props;
         }
         if (hooks) {
             if (process.env.NODE_ENV !== 'production') {
-                throwError$2('"hooks" are not supported on stateful components.');
+                inferno.throwError('"hooks" are not supported on stateful components.');
             }
-            throwError$2();
+            inferno.throwError();
         }
         var instance = createStatefulComponentInstance(component, props, context, isSVG, devToolsStatus);
         var input = instance._lastInput;
         instance._vComponent = vComponent;
         vComponent.dom = dom = mount(input, null, lifecycle, instance._childContext, false, shallowUnmount);
-        if (!isNull$3(parentDom)) {
+        if (!inferno.isNull(parentDom)) {
             appendChild(parentDom, dom);
         }
         mountStatefulComponentCallbacks(ref, instance, lifecycle);
@@ -1640,15 +1590,15 @@ function mountVComponent(vComponent, parentDom, lifecycle, context, isSVG, shall
     else {
         if (ref) {
             if (process.env.NODE_ENV !== 'production') {
-                throwError$2('"refs" are not supported on stateless components.');
+                inferno.throwError('"refs" are not supported on stateless components.');
             }
-            throwError$2();
+            inferno.throwError();
         }
         var input$1 = createStatelessComponentInput(component, props, context);
         vComponent.dom = dom = mount(input$1, null, lifecycle, context, isSVG, shallowUnmount);
         vComponent.instance = input$1;
         mountStatelessComponentCallbacks(hooks, dom, lifecycle);
-        if (!isNull$3(parentDom)) {
+        if (!inferno.isNull(parentDom)) {
             appendChild(parentDom, dom);
         }
     }
@@ -1656,28 +1606,28 @@ function mountVComponent(vComponent, parentDom, lifecycle, context, isSVG, shall
 }
 function mountStatefulComponentCallbacks(ref, instance, lifecycle) {
     if (ref) {
-        if (isFunction(ref)) {
+        if (inferno.isFunction(ref)) {
             lifecycle.addListener(function () { return ref(instance); });
         }
         else {
             if (process.env.NODE_ENV !== 'production') {
-                throwError$2('string "refs" are not supported in Inferno 0.8+. Use callback "refs" instead.');
+                inferno.throwError('string "refs" are not supported in Inferno 0.8+. Use callback "refs" instead.');
             }
-            throwError$2();
+            inferno.throwError();
         }
     }
-    if (!isNull$3(instance.componentDidMount)) {
+    if (!inferno.isNull(instance.componentDidMount)) {
         lifecycle.addListener(function () {
             instance.componentDidMount();
         });
     }
 }
 function mountStatelessComponentCallbacks(hooks, dom, lifecycle) {
-    if (!isNullOrUndef$3(hooks)) {
-        if (!isNullOrUndef$3(hooks.onComponentWillMount)) {
+    if (!inferno.isNullOrUndef(hooks)) {
+        if (!inferno.isNullOrUndef(hooks.onComponentWillMount)) {
             hooks.onComponentWillMount();
         }
-        if (!isNullOrUndef$3(hooks.onComponentDidMount)) {
+        if (!inferno.isNullOrUndef(hooks.onComponentDidMount)) {
             lifecycle.addListener(function () { return hooks.onComponentDidMount(dom); });
         }
     }
@@ -1713,29 +1663,23 @@ function mountProps(vNode, props, dom, lifecycle, context, isSVG, isSpread, shal
     return formValue;
 }
 function mountRef(dom, value, lifecycle) {
-    if (isFunction(value)) {
+    if (inferno.isFunction(value)) {
         lifecycle.addListener(function () { return value(dom); });
     }
     else {
-        if (isInvalid$3(value)) {
+        if (inferno.isInvalid(value)) {
             return;
         }
         if (process.env.NODE_ENV !== 'production') {
-            throwError$2('string "refs" are not supported in Inferno 0.8+. Use callback "refs" instead.');
+            inferno.throwError('string "refs" are not supported in Inferno 0.8+. Use callback "refs" instead.');
         }
-        throwError$2();
+        inferno.throwError();
     }
 }
 
-var isArray$1 = inferno.common.isArray;
-var isNullOrUndef$2 = inferno.common.isNullOrUndef;
-var isInvalid$2 = inferno.common.isInvalid;
-var isStringOrNumber$1 = inferno.common.isStringOrNumber;
-var isNull$2 = inferno.common.isNull;
-var isUndefined = inferno.common.isUndefined;
 function copyPropsTo(copyFrom, copyTo) {
     for (var prop in copyFrom) {
-        if (isUndefined(copyTo[prop])) {
+        if (inferno.isUndefined(copyTo[prop])) {
             copyTo[prop] = copyFrom[prop];
         }
     }
@@ -1747,7 +1691,7 @@ function createStatefulComponentInstance(Component, props, context, isSVG, devTo
     instance._devToolsStatus = devToolsStatus;
     instance._componentToDOMNodeMap = componentToDOMNodeMap;
     var childContext = instance.getChildContext();
-    if (!isNullOrUndef$2(childContext)) {
+    if (!inferno.isNullOrUndef(childContext)) {
         instance._childContext = Object.assign({}, context, childContext);
     }
     else {
@@ -1758,10 +1702,10 @@ function createStatefulComponentInstance(Component, props, context, isSVG, devTo
     instance._isSVG = isSVG;
     instance.componentWillMount();
     var input = instance.render(props, context);
-    if (isArray$1(input)) {
+    if (inferno.isArray(input)) {
         input = inferno.createVFragment(input, null);
     }
-    else if (isInvalid$2(input)) {
+    else if (inferno.isInvalid(input)) {
         input = inferno.createVPlaceholder();
     }
     instance._pendingSetState = false;
@@ -1779,15 +1723,15 @@ function replaceVNode(parentDom, dom, vNode, shallowUnmount, lifecycle) {
     }
     else {
         replaceChild(parentDom, dom, vNode.dom);
-        unmount$1(vNode, null, lifecycle, false, shallowUnmount);
+        unmount(vNode, null, lifecycle, false, shallowUnmount);
     }
 }
 function createStatelessComponentInput(component, props, context) {
     var input = component(props, context);
-    if (isArray$1(input)) {
+    if (inferno.isArray(input)) {
         input = inferno.createVFragment(input, null);
     }
-    else if (isInvalid$2(input)) {
+    else if (inferno.isInvalid(input)) {
         input = inferno.createVPlaceholder();
     }
     return input;
@@ -1807,7 +1751,7 @@ function appendChild(parentDom, dom) {
     parentDom.appendChild(dom);
 }
 function insertOrAppend(parentDom, newNode, nextNode) {
-    if (isNullOrUndef$2(nextNode)) {
+    if (inferno.isNullOrUndef(nextNode)) {
         appendChild(parentDom, newNode);
     }
     else {
@@ -1822,15 +1766,15 @@ function replaceVFragmentWithNode(parentDom, vFragment, dom, lifecycle, shallowU
 function getPropFromOptElement(optVElement, valueType) {
     var bp = optVElement.bp;
     // TODO check "prop" and "spread"
-    if (!isNull$2(bp.v0)) {
+    if (!inferno.isNull(bp.v0)) {
         if (bp.v0 === valueType) {
             return optVElement.v0;
         }
-        if (!isNull$2(bp.v1)) {
+        if (!inferno.isNull(bp.v1)) {
             if (bp.v1 === valueType) {
                 return optVElement.v1;
             }
-            if (!isNull$2(bp.v2)) {
+            if (!inferno.isNull(bp.v2)) {
                 if (bp.v2 === valueType) {
                     return optVElement.v2;
                 }
@@ -1851,11 +1795,11 @@ function documentCreateElement(tag, isSVG) {
 function replaceWithNewNode(lastNode, nextNode, parentDom, lifecycle, context, isSVG, shallowUnmount) {
     var lastInstance = null;
     var instanceLastNode = lastNode._lastInput;
-    if (!isNullOrUndef$2(instanceLastNode)) {
+    if (!inferno.isNullOrUndef(instanceLastNode)) {
         lastInstance = lastNode;
         lastNode = instanceLastNode;
     }
-    unmount$1(lastNode, null, lifecycle, true, shallowUnmount);
+    unmount(lastNode, null, lifecycle, true, shallowUnmount);
     var dom = mount(nextNode, null, lifecycle, context, isSVG, shallowUnmount);
     nextNode.dom = dom;
     replaceChild(parentDom, dom, lastNode.dom);
@@ -1867,13 +1811,13 @@ function replaceChild(parentDom, nextDom, lastDom) {
     parentDom.replaceChild(nextDom, lastDom);
 }
 function normalise(object) {
-    if (isStringOrNumber$1(object)) {
+    if (inferno.isStringOrNumber(object)) {
         return inferno.createVText(object);
     }
-    else if (isInvalid$2(object)) {
+    else if (inferno.isInvalid(object)) {
         return inferno.createVPlaceholder();
     }
-    else if (isArray$1(object)) {
+    else if (inferno.isArray(object)) {
         return inferno.createVFragment(object, null);
     }
     else if (inferno.isVNode(object) && object.dom) {
@@ -1893,8 +1837,8 @@ function removeAllChildren(dom, children, lifecycle, shallowUnmount) {
     dom.textContent = '';
     for (var i = 0; i < children.length; i++) {
         var child = children[i];
-        if (!isInvalid$2(child)) {
-            unmount$1(child, null, lifecycle, true, shallowUnmount);
+        if (!inferno.isInvalid(child)) {
+            unmount(child, null, lifecycle, true, shallowUnmount);
         }
     }
 }
@@ -1902,8 +1846,8 @@ function isKeyed(lastChildren, nextChildren) {
     if (lastChildren.complex) {
         return false;
     }
-    return nextChildren.length && !isNullOrUndef$2(nextChildren[0]) && !isNullOrUndef$2(nextChildren[0].key)
-        && lastChildren.length && !isNullOrUndef$2(lastChildren[0]) && !isNullOrUndef$2(lastChildren[0].key);
+    return nextChildren.length && !inferno.isNullOrUndef(nextChildren[0]) && !inferno.isNullOrUndef(nextChildren[0].key)
+        && lastChildren.length && !inferno.isNullOrUndef(lastChildren[0]) && !inferno.isNullOrUndef(lastChildren[0].key);
 }
 function formSelectValueFindOptions(dom, value, isMap) {
     var child = dom.firstChild;
@@ -1920,8 +1864,8 @@ function formSelectValueFindOptions(dom, value, isMap) {
 }
 function formSelectValue(dom, value) {
     var isMap = false;
-    if (!isNullOrUndef$2(value)) {
-        if (isArray$1(value)) {
+    if (!inferno.isNullOrUndef(value)) {
+        if (inferno.isArray(value)) {
             // Map vs Object v using reduce here for perf?
             value = value.reduce(function (o, v) { return o.set(v, true); }, new Map());
             isMap = true;
@@ -1942,20 +1886,6 @@ function resetFormInputProperties(dom) {
     }
 }
 
-var isArray = inferno.common.isArray;
-var isNull$1 = inferno.common.isNull;
-var isStringOrNumber = inferno.common.isStringOrNumber;
-var isString = inferno.common.isString;
-var isInvalid$1 = inferno.common.isInvalid;
-var isStatefulComponent = inferno.common.isStatefulComponent;
-var throwError$1 = inferno.common.throwError;
-var isObject = inferno.common.isObject;
-var isNullOrUndef$1 = inferno.common.isNullOrUndef;
-var isUnknownChildrenType = inferno.common.isUnknownChildrenType;
-var isKeyedListChildrenType = inferno.common.isKeyedListChildrenType;
-var isNonKeyedListChildrenType = inferno.common.isNonKeyedListChildrenType;
-var isTextChildrenType = inferno.common.isTextChildrenType;
-var isNodeChildrenType = inferno.common.isNodeChildrenType;
 function hydrateChild(child, childNodes, counter, parentDom, lifecycle, context) {
     var domNode = childNodes[counter.i];
     if (inferno.isVText(child)) {
@@ -2030,7 +1960,7 @@ function hydrateVComponent(vComponent, dom, lifecycle, context) {
     var hooks = vComponent.hooks;
     var ref = vComponent.ref;
     vComponent.dom = dom;
-    if (isStatefulComponent(vComponent)) {
+    if (inferno.isStatefulComponent(vComponent)) {
         var isSVG = dom.namespaceURI === svgNS;
         var instance = createStatefulComponentInstance(component, props, context, isSVG, createStaticVElementClone);
         var input = instance._lastInput;
@@ -2050,11 +1980,11 @@ function hydrateVComponent(vComponent, dom, lifecycle, context) {
 }
 function hydrateVElement(vElement, dom, lifecycle, context) {
     var tag = vElement.tag;
-    if (!isString(tag)) {
+    if (!inferno.isString(tag)) {
         if (process.env.NODE_ENV !== 'production') {
-            throwError$1('expects VElement to have a string as the tag name');
+            inferno.throwError('expects VElement to have a string as the tag name');
         }
-        throwError$1();
+        inferno.throwError();
     }
     var children = vElement.children;
     vElement.dom = dom;
@@ -2070,46 +2000,46 @@ function hydrateArrayChildrenWithType(children, dom, lifecycle, context) {
 }
 function hydrateChildrenWithUnknownType(children, dom, lifecycle, context) {
     var domNodes = Array.prototype.slice.call(dom.childNodes);
-    if (isArray(children)) {
+    if (inferno.isArray(children)) {
         for (var i = 0; i < children.length; i++) {
             var child = normaliseChild(children, i);
-            if (isObject(child)) {
+            if (inferno.isObject(child)) {
                 hydrate(child, domNodes[i], lifecycle, context);
             }
         }
     }
-    else if (isObject(children)) {
+    else if (inferno.isObject(children)) {
         hydrate(children, dom.firstChild, lifecycle, context);
     }
 }
 function hydrateChildren(childrenType, children, dom, lifecycle, context, isSVG) {
     if ( isSVG === void 0 ) isSVG = false;
 
-    if (isNodeChildrenType(childrenType)) {
+    if (inferno.isNodeChildrenType(childrenType)) {
         hydrate(children, dom.firstChild, lifecycle, context);
     }
-    else if (isKeyedListChildrenType(childrenType) || isNonKeyedListChildrenType(childrenType)) {
+    else if (inferno.isKeyedListChildrenType(childrenType) || inferno.isNonKeyedListChildrenType(childrenType)) {
         hydrateArrayChildrenWithType(children, dom, lifecycle, context);
     }
-    else if (isUnknownChildrenType(childrenType)) {
+    else if (inferno.isUnknownChildrenType(childrenType)) {
         hydrateChildrenWithUnknownType(children, dom, lifecycle, context);
     }
-    else if (!isTextChildrenType(childrenType)) {
+    else if (!inferno.isTextChildrenType(childrenType)) {
         if (process.env.NODE_ENV !== 'production') {
-            throwError$1('Bad childrenType value specified when attempting to hydrateChildren.');
+            inferno.throwError('Bad childrenType value specified when attempting to hydrateChildren.');
         }
-        throwError$1();
+        inferno.throwError();
     }
 }
 function hydrateStaticVElement(node, dom) {
     var children = node.children;
-    if (!isNull$1(children) && !isNullOrUndef$1(dom)) {
-        if (!isStringOrNumber(children) && !isInvalid$1(children)) {
+    if (!inferno.isNull(children) && !inferno.isNullOrUndef(dom)) {
+        if (!inferno.isStringOrNumber(children) && !inferno.isInvalid(children)) {
             var childNode = dom.firstChild;
-            if (isArray(children)) {
+            if (inferno.isArray(children)) {
                 for (var i = 0; i < children.length; i++) {
                     var child = children[i];
-                    if (!isStringOrNumber(child) && !isInvalid$1(child)) {
+                    if (!inferno.isStringOrNumber(child) && !inferno.isInvalid(child)) {
                         normaliseChildNodes(childNode);
                         hydrateStaticVElement(child, normaliseChildNodes(childNode));
                     }
@@ -2129,16 +2059,16 @@ function hydrateOptVElement(optVElement, dom, lifecycle, context) {
     var staticVElement = bp.staticVElement;
     hydrateStaticVElement(staticVElement, dom);
     optVElement.dom = dom;
-    if (!isNull$1(bp0)) {
+    if (!inferno.isNull(bp0)) {
         hydrateOptVElementValue(optVElement, bp0, optVElement.v0, bp.d0, dom, lifecycle, context);
         var bp1 = bp.v1;
-        if (!isNull$1(bp1)) {
+        if (!inferno.isNull(bp1)) {
             hydrateOptVElementValue(optVElement, bp1, optVElement.v1, bp.d1, dom, lifecycle, context);
             var bp2 = bp.v2;
-            if (!isNull$1(bp2)) {
+            if (!inferno.isNull(bp2)) {
                 hydrateOptVElementValue(optVElement, bp2, optVElement.v2, bp.d2, dom, lifecycle, context);
                 var bp3 = bp.v3;
-                if (!isNull$1(bp3)) {
+                if (!inferno.isNull(bp3)) {
                     var v3 = optVElement.v3;
                     var d3 = bp.d3;
                     var bp3$1 = bp.v3;
@@ -2163,7 +2093,7 @@ function hydrateVFragment(vFragment, currentDom, lifecycle, context) {
     for (var i = 0; i < children.length; i++) {
         var child = normaliseChild(children, i);
         var childDom = currentDom;
-        if (isObject(child)) {
+        if (inferno.isObject(child)) {
             hydrate(child, childDom, lifecycle, context);
         }
         currentDom = currentDom.nextSibling;
@@ -2192,7 +2122,7 @@ function hydrateOptVElementValue(optVElement, valueType, value, descriptor, dom,
             patchStyle(null, value, dom);
             break;
         case inferno.ValueTypes.PROP_VALUE:
-            dom.value = isNullOrUndef$1(value) ? '' : value;
+            dom.value = inferno.isNullOrUndef(value) ? '' : value;
             break;
         case inferno.ValueTypes.PROP:
             patchProp(descriptor, null, value, dom, false);
@@ -2222,9 +2152,9 @@ function hydrate(input, dom, lifecycle, context) {
     }
     else {
         if (process.env.NODE_ENV !== 'production') {
-            throwError$1('bad input argument called on hydrate(). Input argument may need normalising.');
+            inferno.throwError('bad input argument called on hydrate(). Input argument may need normalising.');
         }
-        throwError$1();
+        inferno.throwError();
     }
 }
 function hydrateRoot(input, parentDom, lifecycle) {
@@ -2239,12 +2169,6 @@ function hydrateRoot(input, parentDom, lifecycle) {
     return false;
 }
 
-var isNull = inferno.common.isNull;
-var isInvalid = inferno.common.isInvalid;
-var isNullOrUndef = inferno.common.isNullOrUndef;
-var isBrowser = inferno.common.isBrowser;
-var throwError = inferno.common.throwError;
-var NO_OP = inferno.common.NO_OP;
 // rather than use a Map, like we did before, we can use an array here
 // given there shouldn't be THAT many roots on the page, the difference
 // in performance is huge: https://esbench.com/bench/5802a691330ab09900a1a2da
@@ -2253,7 +2177,7 @@ var componentToDOMNodeMap = new Map();
 function findDOMNode(domNode) {
     return componentToDOMNodeMap.get(domNode) || null;
 }
-var documentBody = isBrowser ? document.body : null;
+var documentBody = inferno.isBrowser ? document.body : null;
 function getRoot(dom) {
     for (var i = 0; i < roots.length; i++) {
         var root = roots[i];
@@ -2280,17 +2204,17 @@ function removeRoot(root) {
 function render(input, parentDom) {
     if (documentBody === parentDom) {
         if (process.env.NODE_ENV !== 'production') {
-            throwError('you cannot render() to the "document.body". Use an empty element as a container instead.');
+            inferno.throwError('you cannot render() to the "document.body". Use an empty element as a container instead.');
         }
-        throwError();
+        inferno.throwError();
     }
-    if (input === NO_OP) {
+    if (input === inferno.NO_OP) {
         return;
     }
     var root = getRoot(parentDom);
     var lifecycle = new Lifecycle();
-    if (isNull(root)) {
-        if (!isInvalid(input)) {
+    if (inferno.isNull(root)) {
+        if (!inferno.isInvalid(input)) {
             if (input.dom) {
                 input = inferno.cloneVNode(input);
             }
@@ -2302,7 +2226,7 @@ function render(input, parentDom) {
         }
     }
     else {
-        if (isNullOrUndef(input)) {
+        if (inferno.isNullOrUndef(input)) {
             unmount(root.input, parentDom, lifecycle, false, false);
             removeRoot(root);
         }
@@ -2329,7 +2253,7 @@ function createRenderer() {
     };
 }
 
-if (inferno.common.isBrowser) {
+if (inferno.isBrowser) {
     initDevToolsHooks(window);
 }
 var index = {

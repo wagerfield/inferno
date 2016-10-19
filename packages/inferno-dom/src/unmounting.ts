@@ -8,15 +8,6 @@ import {
 	isVPlaceholder,
 	isVFragment,
 	ValueTypes,
-	common
-} from 'inferno';
-import {
-	poolOptVElement,
-	poolVComponent,
-	recyclingEnabled
-} from './recycling';
-
-const {
 	isNullOrUndef,
 	isArray,
 	isNull,
@@ -24,7 +15,12 @@ const {
 	isFunction,
 	throwError,
 	isObject
-} = common;
+} from 'inferno';
+import {
+	poolOptVElement,
+	poolVComponent,
+	recyclingEnabled
+} from './recycling';
 
 export function unmount(input, parentDom, lifecycle, canRecycle, shallowUnmount) {
 	if (!isInvalid(input)) {

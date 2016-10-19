@@ -12,19 +12,15 @@ import {
 	isVComponent,
 	isVNode,
 	cloneVNode,
-	common
-} from 'inferno';
-import { componentToDOMNodeMap } from './rendering';
-import { svgNS } from './constants';
-
-const {
 	isArray,
 	isNullOrUndef,
 	isInvalid,
 	isStringOrNumber,
 	isNull,
 	isUndefined
-} = common;
+} from 'inferno';
+import { componentToDOMNodeMap } from './rendering';
+import { svgNS } from './constants';
 
 export function copyPropsTo(copyFrom, copyTo) {
 	for (let prop in copyFrom) {

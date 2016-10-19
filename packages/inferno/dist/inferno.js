@@ -66,6 +66,7 @@ function warning(condition, message) {
         console.error(message);
     }
 }
+var EMPTY_OBJ = {};
 
 var ValueTypes = {
     CHILDREN: 1,
@@ -207,6 +208,18 @@ function isOptVElement(o) {
 }
 function isVComponent(o) {
     return o.type === NodeTypes.COMPONENT;
+}
+function isVText(o) {
+    return o.type === NodeTypes.TEXT;
+}
+function isVFragment(o) {
+    return o.type === NodeTypes.FRAGMENT;
+}
+function isVPlaceholder(o) {
+    return o.type === NodeTypes.PLACEHOLDER;
+}
+function isVNode(o) {
+    return !isUndefined(o.type);
 }
 
 function convertVOptElementToVElement(optVElement) {
@@ -396,31 +409,37 @@ var index = {
     ChildrenTypes: ChildrenTypes,
     NodeTypes: NodeTypes,
     // common
-    common: {
-        isBrowser: isBrowser,
-        NO_OP: NO_OP,
-        isArray: isArray,
-        toArray: toArray,
-        isStatefulComponent: isStatefulComponent,
-        isStringOrNumber: isStringOrNumber,
-        isNullOrUndef: isNullOrUndef,
-        isInvalid: isInvalid,
-        isFunction: isFunction,
-        isAttrAnEvent: isAttrAnEvent,
-        isString: isString,
-        isNumber: isNumber,
-        isNull: isNull,
-        isTrue: isTrue,
-        isUndefined: isUndefined,
-        isObject: isObject,
-        throwError: throwError,
-        warning: warning,
-        isUnknownChildrenType: isUnknownChildrenType,
-        isKeyedListChildrenType: isKeyedListChildrenType,
-        isNonKeyedListChildrenType: isNonKeyedListChildrenType,
-        isTextChildrenType: isTextChildrenType,
-        isNodeChildrenType: isNodeChildrenType
-    }
+    isBrowser: isBrowser,
+    NO_OP: NO_OP,
+    isArray: isArray,
+    toArray: toArray,
+    isStatefulComponent: isStatefulComponent,
+    isStringOrNumber: isStringOrNumber,
+    isNullOrUndef: isNullOrUndef,
+    isInvalid: isInvalid,
+    isFunction: isFunction,
+    isAttrAnEvent: isAttrAnEvent,
+    isString: isString,
+    isNumber: isNumber,
+    isNull: isNull,
+    isTrue: isTrue,
+    isUndefined: isUndefined,
+    isObject: isObject,
+    throwError: throwError,
+    warning: warning,
+    isUnknownChildrenType: isUnknownChildrenType,
+    isKeyedListChildrenType: isKeyedListChildrenType,
+    isNonKeyedListChildrenType: isNonKeyedListChildrenType,
+    isTextChildrenType: isTextChildrenType,
+    isNodeChildrenType: isNodeChildrenType,
+    EMPTY_OBJ: EMPTY_OBJ,
+    isOptVElement: isOptVElement,
+    isVComponent: isVComponent,
+    isVElement: isVElement,
+    isVText: isVText,
+    isVFragment: isVFragment,
+    isVPlaceholder: isVPlaceholder,
+    isVNode: isVNode
 };
 
 return index;

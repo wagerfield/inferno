@@ -1,4 +1,33 @@
 import {
+	isVNode,
+	isVElement,
+	isOptVElement,
+	isVFragment,
+	isVComponent,
+	isVPlaceholder,
+	isVText,
+	createVPlaceholder,
+	createVFragment,
+	ValueTypes,
+	isNullOrUndef,
+	isUndefined,
+	isNull,
+	isString,
+	isStatefulComponent,
+	isStringOrNumber,
+	isInvalid,
+	NO_OP,
+	isNumber,
+	isArray,
+	isAttrAnEvent,
+	throwError,
+	isKeyedListChildrenType,
+	isNonKeyedListChildrenType,
+	isNodeChildrenType,
+	isTextChildrenType,
+	isUnknownChildrenType
+} from 'inferno';
+import {
 	mount,
 	mountVElement,
 	mountVText,
@@ -31,19 +60,6 @@ import {
 	replaceVNode
 } from './utils';
 import { componentToDOMNodeMap } from './rendering';
-import {
-	isVNode,
-	isVElement,
-	isOptVElement,
-	isVFragment,
-	isVComponent,
-	isVPlaceholder,
-	isVText,
-	createVPlaceholder,
-	createVFragment,
-	ValueTypes,
-	common
-} from 'inferno';
 import { unmount } from './unmounting';
 import {
 	isUnitlessNumber,
@@ -57,26 +73,6 @@ import {
 	OptVElement,
 	VElement
 } from '../../../shared/shapes';
-
-const {
-	isNullOrUndef,
-	isUndefined,
-	isNull,
-	isString,
-	isStatefulComponent,
-	isStringOrNumber,
-	isInvalid,
-	NO_OP,
-	isNumber,
-	isArray,
-	isAttrAnEvent,
-	throwError,
-	isKeyedListChildrenType,
-	isNonKeyedListChildrenType,
-	isNodeChildrenType,
-	isTextChildrenType,
-	isUnknownChildrenType
-} = common;
 
 function replaceLastChildAndUnmount(lastInput, nextInput, parentDom, lifecycle, context, isSVG, shallowUnmount) {
 	replaceChild(parentDom, mount(nextInput, null, lifecycle, context, isSVG, shallowUnmount), lastInput.dom);

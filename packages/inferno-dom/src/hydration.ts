@@ -5,8 +5,21 @@ import {
 	isVElement,
 	isVComponent,
 	isOptVElement,
-	common,
-	ValueTypes
+	ValueTypes,
+	isArray,
+	isNull,
+	isStringOrNumber,
+	isString,
+	isInvalid,
+	isStatefulComponent,
+	throwError,
+	isObject,
+	isNullOrUndef,
+	isUnknownChildrenType,
+	isKeyedListChildrenType,
+	isNonKeyedListChildrenType,
+	isTextChildrenType,
+	isNodeChildrenType	
 } from 'inferno';
 import {
 	replaceChild,
@@ -27,23 +40,6 @@ import {
 import { componentToDOMNodeMap } from './rendering';
 import { svgNS } from './constants';
 import createStaticVElementClone from './createStaticVElementClone';
-
-const {
-	isArray,
-	isNull,
-	isStringOrNumber,
-	isString,
-	isInvalid,
-	isStatefulComponent,
-	throwError,
-	isObject,
-	isNullOrUndef,
-	isUnknownChildrenType,
-	isKeyedListChildrenType,
-	isNonKeyedListChildrenType,
-	isTextChildrenType,
-	isNodeChildrenType
-} = common;
 
 function hydrateChild(child, childNodes, counter, parentDom, lifecycle, context) {
 	const domNode = childNodes[counter.i];

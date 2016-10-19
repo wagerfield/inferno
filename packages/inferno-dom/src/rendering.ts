@@ -1,19 +1,23 @@
 import Lifecycle from './lifecycle';
 import {
-	common,
+	isNull,
+	isInvalid,
+	isNullOrUndef,
+	isBrowser,
+	throwError,
+	NO_OP,
 	cloneVNode
 } from 'inferno';
 import hydrateRoot from './hydration';
 import { mountChildrenWithUnknownType } from './mounting';
 import { patchChildrenWithUnknownType } from './patching';
+import { unmount } from './unmounting';
 import { devToolsStatus, sendRoots } from './devtools';
 import {
 	InfernoInput,
 	InfernoElement,
 	Root
 } from '../../../shared/shapes';
-
-const { isNull, isInvalid, isNullOrUndef, isBrowser, throwError, NO_OP } = common;
 
 // rather than use a Map, like we did before, we can use an array here
 // given there shouldn't be THAT many roots on the page, the difference

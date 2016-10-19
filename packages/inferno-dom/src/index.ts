@@ -1,12 +1,12 @@
 import {
-	common
+	isBrowser
 } from 'inferno';
 import { render, findDOMNode, createRenderer } from './rendering';
 import createStaticVElementClone from './createStaticVElementClone';
 import { disableRecycling } from './recycling';
 import { initDevToolsHooks }  from './devtools';
 
-if (common.isBrowser) {
+if (isBrowser) {
 	initDevToolsHooks(window);
 }
 

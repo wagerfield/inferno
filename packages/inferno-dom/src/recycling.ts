@@ -1,14 +1,12 @@
-import { common } from 'inferno';
+import {
+	isUndefined,
+	isNull
+} from 'inferno';
 import {
 	patchOptVElement,
 	patchVComponent
 } from './patching';
 import { Pools, VComponent } from '../../../shared/shapes';
-
-const {
-	isUndefined,
-	isNull
-} = common;
 
 export let recyclingEnabled = true;
 let vComponentPools = new Map<Function | null, Pools>();

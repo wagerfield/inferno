@@ -1,21 +1,5 @@
 
 import {
-	setTextContent,
-	normaliseChild,
-	appendChild,
-	formSelectValue,
-	getPropFromOptElement,
-	createStatefulComponentInstance,
-	createStatelessComponentInput,
-	documentCreateElement,
-	copyPropsTo
-} from './utils';
-import {
-	patchStyle,
-	patchProp
-} from './patching';
-import { componentToDOMNodeMap } from './rendering';
-import {
 	isVElement,
 	isOptVElement,
 	isVText,
@@ -23,17 +7,6 @@ import {
 	isVComponent,
 	isVPlaceholder,
 	ValueTypes,
-	common
-} from 'inferno';
-import {
-	recycleOptVElement,
-	recyclingEnabled,
-	recycleVComponent
-} from './recycling';
-import createStaticVElementClone from './createStaticVElementClone';
-import { devToolsStatus } from './devtools';
-
-const {
 	isArray,
 	isStringOrNumber,
 	isFunction,
@@ -50,7 +23,30 @@ const {
 	isKeyedListChildrenType,
 	isNonKeyedListChildrenType,
 	isUnknownChildrenType
-} = common;
+} from 'inferno';
+import {
+	setTextContent,
+	normaliseChild,
+	appendChild,
+	formSelectValue,
+	getPropFromOptElement,
+	createStatefulComponentInstance,
+	createStatelessComponentInput,
+	documentCreateElement,
+	copyPropsTo
+} from './utils';
+import {
+	patchStyle,
+	patchProp
+} from './patching';
+import { componentToDOMNodeMap } from './rendering';
+import {
+	recycleOptVElement,
+	recyclingEnabled,
+	recycleVComponent
+} from './recycling';
+import createStaticVElementClone from './createStaticVElementClone';
+import { devToolsStatus } from './devtools';
 
 export function mount(input, parentDom, lifecycle, context, isSVG, shallowUnmount) {
 	if (isOptVElement(input)) {

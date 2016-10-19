@@ -2,16 +2,12 @@ import { documentCreateElement } from './utils';
 import { patchProp } from './patching';
 import {
 	OptBlueprint,
-	common
-} from 'inferno';
-
-const {
 	isBrowser,
 	isNull,
 	isArray,
 	isStringOrNumber,
 	isInvalid
-} = common;
+} from 'inferno';
 
 function mountStaticChildren(children, dom: Node | SVGAElement, isSVG: boolean) {
 	if (isArray(children)) {
