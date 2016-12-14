@@ -3,7 +3,7 @@ import { render } from '../../DOM/rendering';
 import Component from '../../component/es2015';
 import createElement from '../../factories/createElement';
 import Provider from '../Provider';
-import connect from '../connect';
+import connect from '../observer';
 import inject from '../inject';
 
 describe('MobX connect()', () => {

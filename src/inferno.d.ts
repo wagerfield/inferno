@@ -86,12 +86,15 @@ declare module 'mobx' {
 	export function observable(value: any): any;
 	export function isObservable(value: any, property?: string): boolean;
 	export function extendObservable(...rest): any;
+	export class Atom {
+		constructor(name: string);
+		reportObserved();
+		reportChanged();
+	}
 	export class Reaction {
 		constructor(name?: string, onInvalidate?: any);
 		track(param: any): void;
-		runReaction();
 		dispose();
-		getDisposer(): any;
 	}
 	export const extras: any;
 }

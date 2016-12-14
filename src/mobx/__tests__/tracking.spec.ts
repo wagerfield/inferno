@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { trackComponents } from '../makeReactive';
+import { trackComponents } from '../observer';
 
 describe('MobX trackComponents()', () => {
 	const _WeakMap = WeakMap;

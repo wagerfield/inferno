@@ -1,6 +1,6 @@
 import { observable, extendObservable, toJS } from 'mobx';
 import { expect } from 'chai';
-import makeReactive from '../makeReactive';
+import observer from '../observer';
 import Component from 'inferno-component';
 import Inferno, { render } from 'inferno';
 Inferno; // suppress ts 'never used' error
@@ -23,13 +23,13 @@ describe('MobX Observer', () => {
 		render(null, container);
 	});
 
-	const TodoItem = makeReactive(function({ todo }) {
+	const TodoItem = observer(function({ todo }) {
 		return <li>{ todo }</li>;
 	});
 
 	let todoListRenderings = 0;
 	let todoListWillReactCount = 0;
-	const TodoList = makeReactive(class extends Component<any, any> {
+	const TodoList = observer(class extends Component<any, any> {
 		componentWillReact() {
 			todoListWillReactCount++;
 		}
@@ -57,7 +57,7 @@ describe('MobX Observer', () => {
 	});
 
 	it('should render a todo list with non observale item', () => {
-		const FlatList = makeReactive(class extends Component<any, any> {
+		const FlatList = observer(class extends Component<any, any> {
 			render({ extra }) {
 				return <div>{store.todos.map(title => <li>{ title }{ extra.test }</li>)}</div>;
 			}
