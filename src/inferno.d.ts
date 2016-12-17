@@ -22,6 +22,7 @@ declare module 'inferno-component' {
 		constructor (props?: P, context?: C);
 		componentWillReact();
 		componentWillReceiveProps? (nextProps: P, nextContext: C): void;
+		shouldComponentUpdate? (nextProps: P, nextState: C, context?: any): void;
 		forceUpdate (): void;
 		setState (v: Object, cb?: () => {}): boolean;
 		isPrototypeOf (v: Object): void;
@@ -83,6 +84,7 @@ declare module 'history/createMemoryHistory' {
 
 declare module 'mobx' {
 	export function toJS(value: any): any;
+	export function action(func: Function): any;
 	export function observable(value: any): any;
 	export function isObservable(value: any, property?: string): boolean;
 	export function extendObservable(...rest): any;

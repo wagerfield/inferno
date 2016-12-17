@@ -68,7 +68,7 @@ function patch(target, funcName, runMixinFirst = false) {
 }
 
 function isObjectShallowModified(prev, next) {
-	if (null === prev || null === next || typeof prev !== "object" || typeof next !== "object") {
+	if (null == prev || null == next || typeof prev !== "object" || typeof next !== "object") {
 		return prev !== next;
 	}
 	const keys = Object.keys(prev);
@@ -97,7 +97,7 @@ const reactiveMixin = {
 			|| this.name
 			|| (this.constructor && (this.constructor.displayName || this.constructor.name))
 			|| "<component>";
-		const rootNodeID = this._reactInternalInstance && this._reactInternalInstance._rootNodeID;
+		const rootNodeID = `root_${(Math.random() * 1000000000) | 0}`;
 
 		/**
 		 * If props are shallowly modified, react will render anyway,
@@ -231,9 +231,10 @@ const reactiveMixin = {
 			console.warn("[inferno-mobx] It seems that a re-rendering of a component is triggered while in static (server-side) mode. Please make sure components are rendered only once server-side.");
 		}
 		// update on any state changes (as is the default)
-		if (this.state !== nextState) {
+		if (isObjectShallowModified(this.state, nextState)) {
 			return true;
 		}
+
 		// update if props are shallowly not equal, inspired by PureRenderMixin
 		// we could return just 'false' here, and avoid the `skipRender` checks etc
 		// however, it is nicer if lifecycle events are triggered like usually,
@@ -270,7 +271,6 @@ export default function observer(arg1, arg2?) {
 		typeof componentClass === "function" &&
 		(!componentClass.prototype || !componentClass.prototype.render) && !Component.isPrototypeOf(componentClass)
 	) {
-
 		return observer(createClass({
 			displayName: componentClass.displayName || componentClass.name,
 			propTypes: componentClass.propTypes,
@@ -295,18 +295,15 @@ function mixinLifecycleEvents(target) {
 	[
 		"componentDidMount",
 		"componentWillUnmount",
+		"componentWillUnmount",
 		"componentDidUpdate"
 	].forEach(function(funcName) {
 		patch(target, funcName);
 	});
-	if (!target.shouldComponentUpdate) {
+
+	const userShouldFunc = Component.prototype.shouldComponentUpdate !== target.shouldComponentUpdate;
+	if (!userShouldFunc || !target.shouldComponentUpdate) {
+		// console.log(target.constructor.displayName, 'mixin');
 		target.shouldComponentUpdate = reactiveMixin.shouldComponentUpdate;
 	}
 }
-
-// TODO: support injection somehow as well?
-export const Observer = observer(({ children }) => children());
-
-Observer.propTypes = {
-	children() {}
-};

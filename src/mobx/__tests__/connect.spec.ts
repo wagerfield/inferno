@@ -112,5 +112,4 @@ describe('MobX inject()', () => {
 		render(App(), container);
 		expect(container.innerHTML).to.equal('<span>hello world</span>');
 	});
-
 });
